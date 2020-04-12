@@ -1,9 +1,14 @@
-from json import dumps
+import json
 
 from kafka import KafkaProducer
 from kafka.admin import KafkaAdminClient
 
 from twitter_client import TwitterClient
+
+"""
+Put your twitter developer account credentials in:-
+    twitter-developer-accnt-credential.json
+"""
 
 
 def describe_topic(admin_client, topic):
@@ -38,12 +43,15 @@ if __name__ == "__main__":
     admin_client = KafkaAdminClient(bootstrap_servers="localhost:9092")
 
     print('\nTo connect to your twitter developer account, '
-          'pls provide below details:-\n')
+          'put your credentials in twitter-developer-accnt-credential.json\n')
 
-    consumer_key = raw_input("Enter consumer key: ").strip()
-    consumer_secret = raw_input("Enter consumer secret: ").strip()
-    access_token = raw_input("Enter Access token: ").strip()
-    access_token_secret = raw_input("Enter Access token secret: ").strip()
+    with open('twitter-developer-accnt-credential.json') as f:
+        credential = json.load(f)
+
+    consumer_key = credential['consumer_key']
+    consumer_secret = credential['consumer_secret']
+    access_token = credential['access_token']
+    access_token_secret = credential['access_token_secret']
 
     twitter_client = TwitterClient(consumer_key, consumer_secret,
                                    access_token, access_token_secret)
